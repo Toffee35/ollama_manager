@@ -1,8 +1,8 @@
 FROM rust:latest
 
-WORKDIR /usr/src/ollama_bot
+WORKDIR /usr/src/ollama_manager
 COPY . .
 
 RUN cargo install --path .
 
-CMD ["ollama_bot"]
+CMD ["ollama_manager"]
