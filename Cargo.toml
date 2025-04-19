@@ -1,0 +1,26 @@
+[package]
+name = "ollama_manager"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+sea-orm = { version = "1.1.8", default-features = false, features = [
+  "macros",
+  "sqlx-postgres",
+  "runtime-tokio-rustls",
+] }
+teloxide = { version = "0.15.0", default-features = false, features = [
+  "ctrlc_handler",
+  "rustls",
+] }
+ollama-rs = { version = "0.3.0", default-features = false, features = [
+  "rustls",
+] }
+bollard = { version = "0.18.1", default-features = false, features = [
+  "pipe",
+  "http",
+] }
+tokio = { version = "1.44.1", default-features = false, features = [
+  "macros",
+  "rt-multi-thread",
+] }

@@ -1,0 +1,36 @@
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    networks:
+      - bridge1
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - bridge1
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - bridge1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_USER}
+      BOT_TOKEN: ${BOT_TOKEN}
+
+networks:
+  bridge1:
+    driver: bridge
