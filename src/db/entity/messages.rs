@@ -14,7 +14,7 @@ pub enum AuthorIs {
 #[sea_orm(table_name = "messages")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
-    pub message: i32,
+    pub id: i32,
 
     #[sea_orm(primary_key, auto_increment = false)]
     pub chat: i64,

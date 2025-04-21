@@ -14,10 +14,11 @@ pub async fn create_enums(db: &DbConn, entry: impl EntityTrait) -> Result<(), Db
 
     let enums: &Vec<TypeCreateStatement> = &schema.create_enum_from_entity(entry);
 
-    for e in enums {
-        let result = db.execute(backend.build(e)).await;
+    for statement in enums {
+        let result = db.execute(backend.build(statement)).await;
         match result {
             Ok(_) => (),
+
             Err(err) => match &err {
                 DbErr::Exec(RuntimeErr::SqlxError(SqlxError::Database(db_err))) => {
                     if db_err.code().as_deref() == Some("42710") {
@@ -26,6 +27,7 @@ pub async fn create_enums(db: &DbConn, entry: impl EntityTrait) -> Result<(), Db
                         return Err(err);
                     }
                 }
+
                 _ => return Err(err),
             },
         }
