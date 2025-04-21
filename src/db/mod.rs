@@ -1,6 +1,6 @@
 mod entity;
 
-use entity::create_tables;
+use entity::{create_enums, create_tables};
 
 pub use entity::{chats, messages, users};
 
@@ -14,7 +14,14 @@ pub async fn make_db() -> DbConn {
 
     let db: DbConn = Database::connect(opt).await.unwrap();
 
-    create_tables(&db).await;
+    create_enums(&db, chats::Entity).await.unwrap();
+    create_tables(&db, chats::Entity).await;
+
+    create_enums(&db, messages::Entity).await.unwrap();
+    create_tables(&db, messages::Entity).await;
+
+    create_enums(&db, users::Entity).await.unwrap();
+    create_tables(&db, users::Entity).await;
 
     db
 }
