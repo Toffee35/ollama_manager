@@ -32,7 +32,7 @@ impl Models {
         let containers: Vec<ContainerSummary> = client.list_containers(options).await.unwrap();
 
         for container in containers {
-            println!("{:#?}", container);
+            // println!("{:#?}", container);
         }
 
         Self {
