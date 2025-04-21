@@ -3,7 +3,7 @@ mod db;
 mod models;
 
 use bot::{make_bot, make_handler};
-use db::{chats, make_db, messages};
+use db::{chats, make_db, messages, users};
 use models::{Models, make_models};
 
 use sea_orm::DbConn;

@@ -2,7 +2,7 @@ use sea_orm::entity::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "chat_state")]
-pub enum State {
+pub enum ChatState {
     #[sea_orm(string_value = "Selecting")]
     Selecting,
 
@@ -17,12 +17,12 @@ pub enum State {
 #[sea_orm(table_name = "chats")]
 pub struct Model {
     #[sea_orm(primary_key)]
-    pub chat: i64,
+    pub id: i64,
 
-    pub state: State,
+    pub state: ChatState,
 
-    pub model: String,
-    pub variant: String,
+    pub model: Option<String>,
+    pub variant: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

@@ -2,6 +2,7 @@ mod any_messages;
 mod commands;
 
 use any_messages::messages_handler;
+use commands::filter_commands;
 
 use teloxide::{
     RequestError,
@@ -17,5 +18,6 @@ fn main_filter(msg: Message) -> bool {
 pub fn filter_message() -> UpdateHandler<RequestError> {
     Update::filter_message()
         .filter(main_filter)
+        .branch(filter_commands())
         .branch(dptree::endpoint(messages_handler))
 }

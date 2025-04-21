@@ -19,8 +19,6 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub chat: i64,
 
-    pub answer: Option<i32>,
-
     pub author: AuthorIs,
     pub text: String,
 }

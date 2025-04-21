@@ -1,5 +1,6 @@
 pub mod chats;
 pub mod messages;
+pub mod users;
 
 use sea_orm::{
     ConnectionTrait, DbBackend, DbConn, DbErr, RuntimeErr, Schema, SqlxError,
@@ -11,11 +12,10 @@ async fn create_enums(db: &DbConn) -> Result<(), DbErr> {
 
     let schema = Schema::new(backend);
 
-    let chat_state_enums: &Vec<TypeCreateStatement> =
-        &schema.create_enum_from_entity(chats::Entity);
+    let chats_enums: &Vec<TypeCreateStatement> = &schema.create_enum_from_entity(chats::Entity);
 
-    for chat_state_enum in chat_state_enums {
-        let result = db.execute(backend.build(chat_state_enum)).await;
+    for chats_enum in chats_enums {
+        let result = db.execute(backend.build(chats_enum)).await;
         match result {
             Ok(_) => (),
             Err(err) => match &err {
@@ -31,11 +31,30 @@ async fn create_enums(db: &DbConn) -> Result<(), DbErr> {
         }
     }
 
-    let message_enums: &Vec<TypeCreateStatement> =
+    let messages_enums: &Vec<TypeCreateStatement> =
         &schema.create_enum_from_entity(messages::Entity);
 
-    for message_enum in message_enums {
-        let result = db.execute(backend.build(message_enum)).await;
+    for messages_enum in messages_enums {
+        let result = db.execute(backend.build(messages_enum)).await;
+        match result {
+            Ok(_) => (),
+            Err(err) => match &err {
+                DbErr::Exec(RuntimeErr::SqlxError(SqlxError::Database(db_err))) => {
+                    if db_err.code().as_deref() == Some("42710") {
+                        continue;
+                    } else {
+                        return Err(err);
+                    }
+                }
+                _ => return Err(err),
+            },
+        }
+    }
+
+    let users_enums: &Vec<TypeCreateStatement> = &schema.create_enum_from_entity(users::Entity);
+
+    for users_enum in users_enums {
+        let result = db.execute(backend.build(users_enum)).await;
         match result {
             Ok(_) => (),
             Err(err) => match &err {
@@ -61,19 +80,24 @@ pub async fn create_tables(db: &DbConn) {
 
     create_enums(&db).await.unwrap();
 
-    let chat_state_statement: &TableCreateStatement = &schema
+    let chats_statement: &TableCreateStatement = &schema
         .create_table_from_entity(chats::Entity)
         .if_not_exists()
         .to_owned();
 
-    db.execute(backend.build(chat_state_statement))
-        .await
-        .unwrap();
+    db.execute(backend.build(chats_statement)).await.unwrap();
 
-    let message_statement: &TableCreateStatement = &schema
+    let messages_statement: &TableCreateStatement = &schema
         .create_table_from_entity(messages::Entity)
         .if_not_exists()
         .to_owned();
 
-    db.execute(backend.build(message_statement)).await.unwrap();
+    db.execute(backend.build(messages_statement)).await.unwrap();
+
+    let users_statement: &TableCreateStatement = &schema
+        .create_table_from_entity(users::Entity)
+        .if_not_exists()
+        .to_owned();
+
+    db.execute(backend.build(users_statement)).await.unwrap();
 }

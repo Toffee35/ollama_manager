@@ -2,7 +2,7 @@ mod entity;
 
 use entity::create_tables;
 
-pub use entity::{chats, messages};
+pub use entity::{chats, messages, users};
 
 use sea_orm::{ConnectOptions, Database, DbConn};
 use std::env;
