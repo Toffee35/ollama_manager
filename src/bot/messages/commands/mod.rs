@@ -1,32 +1,14 @@
 mod admin;
 mod user;
 
-use admin::Admin;
-use user::User;
+use admin::{Admin, admin_handler};
+use user::{User, user_handler};
 
-use sea_orm::DbConn;
 use teloxide::{
     RequestError,
     dispatching::{HandlerExt, UpdateHandler},
     dptree,
-    types::Message,
 };
-
-async fn user_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
-    if let Some(text) = msg.text() {
-        println!("User command: {}", text);
-    }
-
-    Ok(())
-}
-
-async fn admin_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
-    if let Some(text) = msg.text() {
-        println!("Admin command: {}", text);
-    }
-
-    Ok(())
-}
 
 pub fn filter_commands() -> UpdateHandler<RequestError> {
     dptree::entry()

@@ -1,10 +1,8 @@
 use sea_orm::DbConn;
-use teloxide::{RequestError, types::Message};
+use teloxide::{Bot, RequestError, prelude::Requester, types::Message};
 
-pub async fn messages_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
-    if let Some(text) = msg.text() {
-        println!("Just message: {}", text);
-    }
+pub async fn messages_handler(bot: Bot, msg: Message, _db: DbConn) -> Result<(), RequestError> {
+    bot.send_message(msg.chat.id, "Message").await?;
 
     Ok(())
 }
