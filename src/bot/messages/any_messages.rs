@@ -3,7 +3,7 @@ use teloxide::{RequestError, types::Message};
 
 pub async fn messages_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
     if let Some(text) = msg.text() {
-        println!("{}", text);
+        println!("Just message: {}", text);
     }
 
     Ok(())

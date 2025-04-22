@@ -12,9 +12,17 @@ use teloxide::{
     types::Message,
 };
 
-async fn command_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
+async fn user_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
     if let Some(text) = msg.text() {
-        println!("{}", text);
+        println!("User command: {}", text);
+    }
+
+    Ok(())
+}
+
+async fn admin_handler(msg: Message, _db: DbConn) -> Result<(), RequestError> {
+    if let Some(text) = msg.text() {
+        println!("Admin command: {}", text);
     }
 
     Ok(())
@@ -25,11 +33,11 @@ pub fn filter_commands() -> UpdateHandler<RequestError> {
         .branch(
             dptree::entry()
                 .filter_command::<User>()
-                .endpoint(command_handler),
+                .endpoint(user_handler),
         )
         .branch(
             dptree::entry()
                 .filter_command::<Admin>()
-                .endpoint(command_handler),
+                .endpoint(admin_handler),
         )
 }
