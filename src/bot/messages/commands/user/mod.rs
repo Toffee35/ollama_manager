@@ -25,23 +25,14 @@ pub async fn user_handler(
     bot: Bot,
     cmd: User,
     msg: Message,
-    _db: DbConn,
+    db: DbConn,
 ) -> Result<(), RequestError> {
-    bot.send_message(
-        msg.chat.id,
-        format!(
-            "User - {}",
-            match cmd {
-                User::Change => "Change",
-                User::Clear => "Clear",
-                User::Gen => "Gen",
-                User::Help => "Help",
-                User::PullReq => "PullReq",
-                User::Start => "Start",
-            }
-        ),
-    )
-    .await?;
+    match cmd {
+        User::Start => start::start(bot, msg, db).await?,
+        _ => {
+            bot.send_message(msg.chat.id, "User - Some").await?;
+        }
+    }
 
     Ok(())
 }
