@@ -27,7 +27,7 @@ pub async fn start(bot: Bot, msg: Message, db: DbConn) -> Result<(), RequestErro
                     KeyboardButton::new("3c"),
                 ],
             ])
-            .resize_keyboard(),
+            .one_time_keyboard(),
         )
         .await?;
 
